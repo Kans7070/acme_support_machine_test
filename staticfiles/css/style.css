@@ -359,6 +359,10 @@ input[type="password"]:placeholder {
 }
 
 
+.m-0{
+    margin: 0px;
+}
+
 /* OTHERS */
 
 *:focus {

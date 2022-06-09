@@ -8,11 +8,21 @@
     <div class='d-flex h-100'>
         {% include 'include/admin_sidebar.html' %}
         <div class="w-100">
-            <div class="text-center w-100 header">Departments</div>
-            <div>
+            <div class="text-center w-100 header mb-2">Departments</div>
+            <div class="d-flex pl-3">
                 {% if messages %}
                 {% for message in messages %}
-                <p>{{message}}</p>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}                
+                <p class="text-danger text-center m-0 mr-3">{{message}}</p>
+                <a href="" class="h-100">
+                    <img src="{% static 'logo/x.svg'%}" height="24px">
+                </a>
+                {% else %}
+                <p class="text-success text-center m-0 mr-3">{{message}}</p>
+                <a href="" class="h-100">
+                    <img src="{% static 'logo/x.svg'%}" height="24px">
+                </a>
+                {% endif %}
                 {% endfor %}
                 {% endif %}
             </div>

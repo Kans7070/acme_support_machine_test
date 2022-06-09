@@ -1,12 +1,13 @@
-{% extends '../layouts/base.html' %} {% load static %} {% block title %} login
-{% endblock %} {% block content %}
+{% extends '../layouts/base.html' %} {% load static %} 
+{% block title %} login {% endblock %}
+{% block content %}
 <div class="wrapper fadeInDown">
   <div id="formContent">
     <!-- Tabs Titles -->
 
     <!-- Icon -->
     <div class="fadeIn first header">
-      <p>Admin Login</p>
+      <p>{{module}} Login</p>
     </div>
 
     <!-- Login Form -->
@@ -17,7 +18,7 @@
         id="login"
         class="fadeIn second"
         name="email"
-        placeholder="email"
+        placeholder="{{field}}"
         required
       />
       <input

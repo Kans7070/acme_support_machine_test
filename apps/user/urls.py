@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import home
+from .views import home, login
 
 
 urlpatterns = [
-    path( '' , home , name = 'home' ),
+    path( '' , home , name = 'user_home' ),
+    path( 'login/' , login , name = 'user_login' ),
 ]
 
 

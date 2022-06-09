@@ -10,8 +10,15 @@ from apps.custom_admin.models import Department
 # Create your views here.
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+def is_admin(user):
+    if user.role == 'Admin':
+        return True
+    return False
+
+
 def home(request):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     users = User.objects.all().exclude(role='Admin')
     context = {
         'users': users
@@ -31,21 +38,28 @@ def login(request):
                 auth.login(request, admin)
                 return redirect('admin_home')
         messages.error(request, 'invalid credentials')
+    context = {
+        'module': 'Admin',
+        'field':'Email'
+    }
+    return render(request, 'accounts/login.html',context)
 
-    return render(request, 'accounts/login.html')
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
 def logout(request):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     auth.logout(request)
     return redirect('admin_login')
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+
 def create_user(request):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     form = CreateUserForm()
     if request.method == 'POST':
-        admin=request.user.email
+        admin=str(request.user.email)
         print(admin)
         if User.objects.filter(email=request.POST['email']).exists():
             messages.error(request, 'Email already exists')
@@ -59,7 +73,7 @@ def create_user(request):
                 phone_number=request.POST['phone_number'],
                 password=request.POST['password'], 
                 department=department, 
-                created_by=admin
+                created_by=admin,
                 )
 
             if user:
@@ -70,8 +84,10 @@ def create_user(request):
     return render(request, 'admin/create_user_page.html', context)
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+
 def department(request):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     departments=Department.object.all()
     context={
         'departments': departments
@@ -79,8 +95,10 @@ def department(request):
     return render(request, 'admin/department_page.html',context)
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+
 def create_department(request):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     form = CreateDepartmentForm()
     if request.method == 'POST':
         if Department.object.filter(name=request.POST['name']).exists():
@@ -97,13 +115,15 @@ def create_department(request):
                 return redirect('department_page')
     context = {
         'form': form,
-        'url_name':'admin_create_department',
+        'action':'Create',
     }
-    return render(request, 'admin/create_department_page.html', context)
+    return render(request, 'admin/department_form_page.html', context)
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+
 def edit_department(request,pk):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     department = Department.object.get(id=pk)
     form = CreateDepartmentForm(instance=department)
     if request.method == 'POST':
@@ -122,16 +142,19 @@ def edit_department(request,pk):
                 messages.error(request, 'invalid form')            
     context = {
         'form': form,
+        'action':'Edit'
     }
-    return render(request, 'admin/create_department_page.html', context)
+    return render(request, 'admin/department_form_page.html', context)
 
 
-@login_required(redirect_field_name=None, login_url='admin_login')
+
 def delete_department(request,pk):
+    if not is_admin(request.user):
+        return redirect('admin_login')
     department = Department.object.get(id=pk)
     user = User.objects.filter(department=department)
     if user:
-        messages.error(request,'Department has an active user')
+        messages.error(request,'Selected department has an active user')
     else:
         department.delete()
         messages.success(request,'Department has deleted')

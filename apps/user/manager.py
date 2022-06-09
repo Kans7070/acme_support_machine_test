@@ -17,9 +17,9 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             phone_number=phone_number,
             department=department,
+            created_by=created_by,
         )
         user.role = 'User'
-        user.created_by=created_by,
         user.set_password(password)
         user.save()
         return user

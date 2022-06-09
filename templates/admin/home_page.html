@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Admin User Page {% endblock %}
+{% block content %}
+<div class="h-100">
+    {% include 'include/admin_navbar.html' %}
+    <div class='d-flex h-100'>
+        {% include 'include/admin_sidebar.html' %}
+        <div class='col-10 h-80 w-100 p-3'>
+            <div class="text-center w-100 header">Users</div>
+            
+            <table class="table">
+                <thead>
+
+                    <tr>
+                        <td>Name</td>
+                        <td>Email</td>
+                        <td>Phone</td>
+                        <td>Department</td>
+                        <td>Role</td>
+                        <td>Created By</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.phone_number}}</td>
+                        <td>{{user.department}}</td>
+                        <td>{{user.role}}</td>
+                        <td>{{user.created_by}}</td>
+                        
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% endblock %}
+</div>

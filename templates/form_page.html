@@ -1,9 +1,9 @@
 {% extends "layouts/base.html" %}
-{% block title %} User Form {% endblock %}
+{% block title %}{{title}}{% endblock %}
 {% load crispy_forms_filters %}
 {% block content %}
 <div class="col-12 text-center mb-5 mt-5">
-    <p class="header">Create users</p>
+    <p class="header">{{title}}</p>
 </div>
 <form class="justify-content-center" action="" method="POST">
     {% csrf_token %}

@@ -1,0 +1,62 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %} Admin Departments Page {% endblock %}
+{% block content %}
+
+<div class=" h-100">
+    {% include 'include/admin_navbar.html' %}
+    <div class='d-flex h-100'>
+        {% include 'include/admin_sidebar.html' %}
+        <div class="w-100">
+            <div class="text-center w-100 header mb-2">Departments</div>
+            <div class="d-flex pl-3">
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}                
+                <p class="text-danger text-center m-0 mr-3">{{message}}</p>
+                <a href="" class="h-100">
+                    <img src="{% static 'logo/x.svg'%}" height="24px">
+                </a>
+                {% else %}
+                <p class="text-success text-center m-0 mr-3">{{message}}</p>
+                <a href="" class="h-100">
+                    <img src="{% static 'logo/x.svg'%}" height="24px">
+                </a>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class='col-10 h-80 w-100 p-3'>
+                <table class="table">
+                    <thead>
+    
+                        <tr>
+                            <td>Name</td>
+                            <td>Description</td>
+                            <td>Created_by</td>
+                            <td>Actions</td>
+                            <td></td>
+    
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for department in departments %}
+                        <tr>
+                            <td>{{department.name}}</td>
+                            <td>{{department.description}}</td>
+                            <td>{{department.created_by}}</td>
+                            <td><a class='btn sidebar-options mb-2'
+                                    href="{% url 'admin_edit_department' department.id %}">Edit</a></td>
+                            <td><a class='btn btn-danger sidebar-options mb-2'
+                                    href="{% url 'admin_delete_department' department.id %}">delete</a></td>
+                        </tr>
+    
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+</div>

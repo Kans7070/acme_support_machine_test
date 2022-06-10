@@ -1,7 +1,14 @@
 {% load static %}
 <div class="container-fluid navbar-holder " >
+    {% if is_admin %}
         <img src="{% static 'logo/admin_logo.png'%}" >
     <div>
         <p class="header text-light">Admin</p>
     </div>
+    {% else %}
+    <img src="{% static 'logo/admin_logo.png'%}" >
+    <div>
+        <p class="header text-light">Ticket Manager</p>
+    </div>
+    {% endif %}
 </div>

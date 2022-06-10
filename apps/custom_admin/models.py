@@ -8,7 +8,7 @@ from .manager import DepartmentManager
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=50)
     created_by = models.CharField(max_length=50)
     created_date = models.DateField(auto_now_add=True,null=True,blank=True)

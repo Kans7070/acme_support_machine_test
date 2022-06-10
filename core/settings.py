@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default=True,cast = bool)
 
 ALLOWED_HOSTS = []
 
@@ -150,3 +150,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #form configuration
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+#zendesk configuration
+ZENDESK_EMAIL=config('ZENDESK_EMAIL')
+ZENDESK_PASSWORD=config('ZENDESK_PASSWORD')
+ZENDESK_SUBDOMAIN=config('ZENDESK_SUBDOMAIN')
+ZENDESK_TICKETS_DOMAIN = 'https://'+ZENDESK_SUBDOMAIN+'.zendesk.com/api/v2/tickets'

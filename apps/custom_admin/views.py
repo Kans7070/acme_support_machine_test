@@ -1,10 +1,14 @@
+from time import time
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from apps.custom_admin.forms import CreateDepartmentForm, CreateUserForm
+from apps.custom_admin.forms import CreateDepartmentForm, CreateUserForm, TicketForm
 from apps.user.models import User
 from apps.custom_admin.models import Department
+from datetime import date, datetime
+
+from apps.zdesk import ticket_show
 
 
 # Create your views here.
@@ -24,8 +28,8 @@ def home(request):
     users = User.objects.all().exclude(role='Admin')
     context = {
         'users': users,
-        'is_admin': 'True',
-        'title': 'Admin User Page'
+        'is_admin': True,
+        'title': 'Users'
     }
     return render(request, 'user_manage_page.html', context)
 
@@ -44,7 +48,7 @@ def login(request):
         messages.error(request, 'invalid credentials')
     context = {
         'field': 'Email',
-        'is_admin': 'True',
+        'is_admin': True,
         'title': 'Admin Login'
     }
     return render(request, 'accounts/login.html', context)
@@ -77,7 +81,7 @@ def create_user(request):
     context = {
         'form': form,
         'title': 'Create User',
-        'is_admin': 'True'
+        'is_admin': True
     }
     return render(request, 'form_page.html', context)
 
@@ -89,7 +93,8 @@ def department(request):
     departments = Department.object.all()
     context = {
         'departments': departments,
-        'is_admin': 'True'
+        'title': 'Departments',
+        'is_admin': True
     }
     return render(request, 'department_manage_page.html', context)
 
@@ -100,22 +105,21 @@ def create_department(request):
         return redirect('user_home')
     form = CreateDepartmentForm()
     if request.method == 'POST':
+        form = CreateDepartmentForm(request.POST)
         if Department.object.filter(name=request.POST['name']).exists():
+
             messages.error(request, 'this department already exists')
         else:
-            admin = request.user.email
-            name = request.POST['name']
-            department = Department.object.create_department(
-                name=name.upper(),
-                description=request.POST['description'],
-                created_by=admin
-            )
-            if department:
+            if form.is_valid():
+                form.instance.created_by = request.user.email
+                form.save()
                 return redirect('department_page')
+            else:
+                messages.error(request, form.errors)
     context = {
         'form': form,
         'title': 'Create Department',
-        'is_admin': 'True'
+        'is_admin': True
     }
     return render(request, 'form_page.html', context)
 
@@ -127,23 +131,19 @@ def edit_department(request, pk):
     department = Department.object.get(id=pk)
     form = CreateDepartmentForm(instance=department)
     if request.method == 'POST':
-        data = {}
-        for x in request.POST:
-            data[x] = request.POST[x]
-        data['name'] = data['name'].upper()
-        if Department.object.filter(name=request.POST['name']).exclude(id=pk).exists():
+        form = CreateDepartmentForm(request.POST, instance=department)
+        if Department.object.filter(name=request.POST['name'].upper()).exists():
             messages.error(request, 'this department already exists')
         else:
-            form = CreateDepartmentForm(data, instance=department)
             if form.is_valid():
                 form.save()
                 return redirect('department_page')
             else:
-                messages.error(request, 'invalid form')
+                messages.error(request, form.errors)
     context = {
         'form': form,
         'title': 'Edit Department',
-        'is_admin': 'True'
+        'is_admin': True
     }
     return render(request, 'form_page.html', context)
 
@@ -161,6 +161,40 @@ def delete_department(request, pk):
         messages.success(request, 'Department has deleted')
     return redirect('department_page')
 
+
+@login_required(redirect_field_name=None, login_url='admin_login')
+def admin_ticket(request):
+    tickets = ticket_show()
+    for ticket in tickets:
+        print(ticket)
+        print(tickets[ticket])
+    context = {
+        'title': 'Tickets',
+        'is_admin': True
+    }
+    return render(request, 'ticket_manage_page.html', context)
+
+
+@login_required(redirect_field_name=None, login_url='admin_login')
+def admin_create_ticket(request):
+    form = TicketForm()
+    if request.method == 'POST':
+        data={
+            'requester':{}
+        }
+        data['subject'] = request.POST['subject']
+        data['priority'] = request.POST['priority']
+        data['requester']['name'] = request.user.name
+        data['requester']['email'] = request.user.email
+        form = TicketForm(data)
+        print(data)
+        if form.is_valid():
+            form.save(data)
+    context = {
+        'title': 'Create Tickets',
+        'form': form,
+    }
+    return render(request, 'form_page.html',context)
 
 
 def logout(request):

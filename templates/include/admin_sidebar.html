@@ -5,7 +5,7 @@
             <a class='button sidebar-options mb-2' href="{% url 'admin_home' %}">User</a>
         </div>
         <div>
-            <a class='button sidebar-options mb-2' href="{% url 'admin_create_user' %}">+</a>
+            <a class='button sidebar-options mb-2' href="{% url 'create_user' %}">+</a>
         </div>
     </div>
     <div  class="justify-content-between d-flex">
@@ -13,22 +13,29 @@
             <a class='button sidebar-options mb-2' href="{% url 'department_page' %}">Department</a>
         </div>
         <div>
-            <a class='button sidebar-options mb-2' href="{% url 'admin_create_department' %}">+</a>
+            <a class='button sidebar-options mb-2' href="{% url 'create_department' %}">+</a>
         </div>
     </div>
-    <div>
-        <a class='button sidebar-options mb-2' href="">Ticket</a>
+    <div class="justify-content-between d-flex">
+        <div>
+            <a class='button sidebar-options mb-2' href="{% url 'admin_ticket_page' %}">Tickets</a>
+        </div>
+        <div>
+            <a class='button sidebar-options mb-2' href="{% url 'admin_create_ticket' %}">+</a>
+        </div>
     </div>
     {% else %}
     <div class="justify-content-between d-flex">
         <div>
-            <a class='button sidebar-options mb-2' href="{% url 'admin_home' %}">Tickets</a>
+            <a class='button sidebar-options mb-2' href="{% url 'user_home' %}">Tickets</a>
         </div>
         <div>
-            <a class='button sidebar-options mb-2' href="{% url 'admin_create_user' %}">+</a>
+            <a class='button sidebar-options mb-2' href="{% url '' %}">+</a>
         </div>
     </div>
     {% endif %}
+
+    
     <div>
         <a class='button sidebar-options mb-2' href="{% url 'logout' %}">Logout</a>
     </div>

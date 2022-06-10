@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block title %} Admin Departments Page {% endblock %}
+{% block title %}{{title}}{% endblock %}
 {% block content %}
 
 <div class=" h-100">
@@ -8,7 +8,7 @@
     <div class='d-flex h-100'>
         {% include 'include/admin_sidebar.html' %}
         <div class="w-100">
-            <div class="text-center w-100 header mb-2">Departments</div>
+            <div class="text-center w-100 header mb-2">{{title}}</div>
             <div class="d-flex pl-3">
                 {% if messages %}
                 {% for message in messages %}
@@ -31,26 +31,19 @@
                     <thead>
     
                         <tr>
-                            <td>Name</td>
-                            <td>Description</td>
-                            <td>Created_by</td>
-                            <td>Actions</td>
-                            <td></td>
-    
+                            <td>Ticket ID</td>
+                            <td>Subjects</td>
+                            <td>Priority</td>
+                            <td>Created At</td>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for department in departments %}
+                        {% for ticket in tickets %}
                         <tr>
-                            <td>{{department.name}}</td>
-                            <td>{{department.description}}</td>
-                            <td>{{department.created_by}}</td>
-                            <td><a class='btn sidebar-options mb-2'
-                                    href="{% url 'admin_edit_department' department.id %}">Edit</a></td>
-                            <td><a class='btn btn-danger sidebar-options mb-2'
-                                    href="{% url 'admin_delete_department' department.id %}">delete</a></td>
-                        </tr>
-    
+                            <td>{{ticket.id}}</td>
+                            <td>{{ticket.subject}}</td>
+                            <td>{{ticket.priority}}</td>
+                            <td>{{ticket.created_at}}</td>
                         {% endfor %}
                     </tbody>
                 </table>

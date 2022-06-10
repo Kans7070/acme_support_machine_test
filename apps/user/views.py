@@ -2,12 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from apps.user.backend import AuthBackend
 
 
 # Create your views here.
 
 @login_required(redirect_field_name=None, login_url='user_login')
 def home(request):
+    
     context = {
         'title': 'Tickets'
     }
@@ -19,8 +21,10 @@ def login(request):
         return redirect('user_home')
     if request.method == 'POST':
         email = request.POST['email']
+        if isinstance(email,str):
+            print('str')
         password = request.POST['password']
-        user = auth.authenticate(email=email, password=password)
+        user = AuthBackend.authenticate(email,password)
         if user:
             auth.login(request, user)
             return redirect('user_home')
@@ -30,3 +34,5 @@ def login(request):
         'field': 'Email or Phone No',
     }
     return render(request, 'accounts/login.html', context)
+
+

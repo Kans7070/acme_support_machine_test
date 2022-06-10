@@ -8,7 +8,7 @@ from apps.user.models import User
 from apps.custom_admin.models import Department
 from datetime import date, datetime
 
-from apps.zdesk import ticket_show
+from apps.zdesk import create_ticket, ticket_show
 
 
 # Create your views here.
@@ -164,13 +164,13 @@ def delete_department(request, pk):
 
 @login_required(redirect_field_name=None, login_url='admin_login')
 def admin_ticket(request):
-    tickets = ticket_show()
-    for ticket in tickets:
-        print(ticket)
-        print(tickets[ticket])
+    datas=ticket_show()
+    for i in datas['tickets']:
+        print(i)
     context = {
         'title': 'Tickets',
-        'is_admin': True
+        'is_admin': True,
+        'datas':datas['tickets']
     }
     return render(request, 'ticket_manage_page.html', context)
 
@@ -179,17 +179,16 @@ def admin_ticket(request):
 def admin_create_ticket(request):
     form = TicketForm()
     if request.method == 'POST':
-        data={
-            'requester':{}
-        }
-        data['subject'] = request.POST['subject']
+        data={}
+        data['subject']=request.POST['subject']
+        data['description'] = request.POST['description']
         data['priority'] = request.POST['priority']
-        data['requester']['name'] = request.user.name
-        data['requester']['email'] = request.user.email
+        data['phone_number'] = request.user.phone_number
+        data['email'] = request.user.email
         form = TicketForm(data)
-        print(data)
         if form.is_valid():
             form.save(data)
+            return redirect('admin_ticket_page')
     context = {
         'title': 'Create Tickets',
         'form': form,

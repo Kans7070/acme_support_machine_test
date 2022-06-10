@@ -38,12 +38,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for ticket in tickets %}
+                        {% for data in datas %}
                         <tr>
-                            <td>{{ticket.id}}</td>
-                            <td>{{ticket.subject}}</td>
-                            <td>{{ticket.priority}}</td>
-                            <td>{{ticket.created_at}}</td>
+                            <td>{{data.id}}</td>
+                            <td>{{data.subject}}</td>
+                            <td>{{data.priority}}</td>
+                            <td>{{data.created_at}}</td>
                         {% endfor %}
                     </tbody>
                 </table>

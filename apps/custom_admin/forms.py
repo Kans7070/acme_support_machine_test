@@ -2,6 +2,7 @@ import json
 from django import forms
 from apps.custom_admin.models import Department
 from apps.user.models import User
+from apps.zdesk import create_ticket
 
 
 class CreateUserForm(forms.ModelForm):
@@ -21,7 +22,7 @@ class CreateUserForm(forms.ModelForm):
         "maxlength": "10",
         'placeholder': 'phone_number',
     }), label='')
-    
+
     department = forms.ModelChoiceField(widget=forms.Select(attrs={
         'class': 'form-control col-4 mb-3',
         'placeholder': 'department',
@@ -57,20 +58,28 @@ class CreateDepartmentForm(forms.ModelForm):
     def save(self):
         print('hai')
         self.instance.name = self.instance.name.upper()
+        
         self.instance.save()
 
 
 class TicketForm(forms.Form):
 
     PRIORITY_CHOICES = (
-        ('Low', 'Low'),
-        ('Medium', 'Medium'),
-        ('Urgent', 'Urgent'),
+        ('low', 'Low'),
+        ('normal', 'Normal'),
+        ('high', 'High'),
+        ('urgent', 'Urgent'),
     )
 
-    subject = forms.CharField(widget=forms.Textarea(attrs={
-        'class': 'form-control col-12 mb-3',
+    subject = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control col-6 mb-3',
         'placeholder': 'subject',
+
+    }), label='')
+    
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control col-12 mb-3',
+        'placeholder': 'description',
         'rows': '5'
     }), label='')
 
@@ -80,13 +89,7 @@ class TicketForm(forms.Form):
     }), label='')
 
     class Meta:
-        fields = ['subject', 'priority']
+        fields = ['subject', 'description', 'priority']
 
-    # def save(self,data):
-    #     print(zdesk_client)
-    #     result = zdesk_client.ticket_create(data=data)
-    #     print(result)
-    #     ticket_id=get_id_from_url(result)
-    #     print(ticket_id)
-    #     ticket = zdesk_client.ticket_show(id=ticket_id)
-    #     print(ticket)
+    def save(self, data):
+        create_ticket(data)

@@ -35,6 +35,10 @@
                             <td>Subjects</td>
                             <td>Priority</td>
                             <td>Created At</td>
+                            {% if is_admin %}
+                            <td>Action</td>
+                            {% endif %}
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +48,10 @@
                             <td>{{data.subject}}</td>
                             <td>{{data.priority}}</td>
                             <td>{{data.created_at}}</td>
+                            {% if is_admin %}
+                            <td><a class='btn btn-danger sidebar-options mb-2'
+                                href="{% url 'delete_ticket' data.id %}">delete</a></td>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

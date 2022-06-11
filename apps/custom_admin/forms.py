@@ -56,7 +56,6 @@ class CreateDepartmentForm(forms.ModelForm):
         fields = ['name', 'description', ]
 
     def save(self):
-        print('hai')
         self.instance.name = self.instance.name.upper()
         
         self.instance.save()
@@ -85,8 +84,8 @@ class TicketForm(forms.Form):
 
     priority = forms.ChoiceField(choices=PRIORITY_CHOICES, widget=forms.Select(attrs={
         'class': 'form-control col-4 mb-3',
-        'placeholder': 'department',
-    }), label='')
+        'placeholder': '',
+    }), label='priority')
 
     class Meta:
         fields = ['subject', 'description', 'priority']

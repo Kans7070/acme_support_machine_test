@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import admin_create_ticket,admin_ticket, create_department, create_user, delete_department, department, edit_department, home,login,logout
+from .views import admin_create_ticket,admin_ticket, create_department, create_user, delete_department, delete_ticket, department, edit_department, home,login,logout
 
 
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     path( 'create_ticket/' , admin_create_ticket , name = 'admin_create_ticket' ),
     path( 'edit_department/<int:pk>' , edit_department , name = 'edit_department' ),
     path( 'delete_department/<int:pk>' , delete_department , name = 'delete_department' ),
+    path( 'delete_ticket/<int:pk>' , delete_ticket , name = 'delete_ticket' ),
 
 ]
 
